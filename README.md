@@ -1,1 +1,1 @@
-Repository with all the HKU projects / assignments by Thomas Klinkenberg
+Repository with the HKU projects / assignments by Thomas Klinkenberg
