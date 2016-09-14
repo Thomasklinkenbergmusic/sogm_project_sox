@@ -4,24 +4,35 @@ echo "Executing $0"
 
 INFILE=$1
 OUTFILE=$2
-MPLAYONOFF=$3
+ARG3=$3
+MPLAYERONOFF=$3
+DURATION=$4
 LENGHTFLOAT=$(soxi -D $INFILE)
 LENGHT=${LENGHTFLOAT%.*}
-SETOFF=$(((RANDOM%($LENGHT - 5))+1))
+SETOFF=$(((RANDOM%($LENGHT - $DURATION))+1))
+STRETCH=2
 
-# Pakt nu elke keer random 5 seconde uit het nummer
+# 
+# if (( $DURATION > $LENGHT ))
+# then
+#   let STRETCH=4
+#   echo "IF STATEMENT WERKT"
+# fi
+#
+# echo $STRETCH
+# HET LUKT NIET HELEMAAL
+# Wat ik in ieder geval probeer is dat wanneer je een duration ($4) invult die
+# langer is dan het originele bestand dat hij de stretch dan langer maakt,
+# zodat hij langer de tijd heeft. Maar blijkbaar werkt dat niet helemaal goed.
+#
 
-sox --norm=-6 $INFILE rm1.wav trim $SETOFF 5
-sox --norm=-6 rm1.wav rm2.wav reverse
-sox --norm=-6 rm2.wav $OUTFILE reverse
+sox --norm=-6 $INFILE $OUTFILE trim $SETOFF $DURATION reverse reverb -w stretch $STRETCH reverse trim 0 $DURATION lowpass 5000 22 reverb -w reverse STRETCH $STRETCH trim 0 $DURATION lowpass 500 3
 
-rm -rf rm1.wav
-rm -rf rm2.wav
+rm -rf removefile.wav
 
-# Een beetje omslachtig, maar het systeem maakt nu rm1.wav,
-# bewerkt die en maakt weer een nieuwe aan. Eigenlijk wil je dat hij de hele
-# tijd zichzelf bewerkt. Alleen werkt het volgende niet:
+if [ $MPLAYERONOFF = 1 ]
+then
+  play $OUTFILE
+fi
 
-# sox --norm=-6 rm1.wav rm1.wav reverse reverb
-
-# Dan geeft hij errors
+# Derde argument moet 0 of 1 zijn. Bepaald of de file gelijk word afgespeeld.
