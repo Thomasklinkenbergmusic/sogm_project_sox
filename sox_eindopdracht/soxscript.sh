@@ -107,12 +107,15 @@ for f in *.wav;
     sox $f ../$2/out4_reversed/${file}_reversed.wav trim $SETOFF4 6 reverse fade 0.1 0 0.1 norm -6 fade 0.1 0 0.1
     I=$((I+1))
 done
-
 #-------------------------------------------------------------------------------
 
-# echo "I = $I"
-# DELER=$(bc <<< 'scale=2;$((60/$I))')
-#
-# echo $DELER
+echo "I = $I"
 
+for f in *.wav;
+  do
+    LENGTE=$(soxi -D $f)
+    JAAA=$(bc <<< "scale=2; (($LENGTE / $I) / 60)")
+    # echo $(bc <<< "scale=2; ($I/$AMTFILES)*100") "%";
+    echo $JAAA
+done
 # rm -rf ../${INDIR}copy
