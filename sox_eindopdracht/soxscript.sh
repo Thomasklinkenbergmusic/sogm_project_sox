@@ -90,6 +90,7 @@ for f in *.mp3;
 done
 
 #-------------------------------------------------------------------------------
+I=0
 
 for f in *.wav;
   do
@@ -104,8 +105,14 @@ for f in *.wav;
     sox $f ../$2/out2_otherroom/${file}_otherroom.wav trim $SETOFF2 3 lowpass 250 reverb 10 norm -12 fade 0.1 0 0.1
     sox $f ../$2/out3_destruction/${file}_destruction.wav trim $SETOFF3 2 overdrive 20 20 overdrive 20 20 overdrive 20 20 norm -18 fade 0.1 0 0.1
     sox $f ../$2/out4_reversed/${file}_reversed.wav trim $SETOFF4 6 reverse fade 0.1 0 0.1 norm -6 fade 0.1 0 0.1
+    I=$((I+1))
 done
 
 #-------------------------------------------------------------------------------
 
-rm -rf ../${INDIR}copy
+# echo "I = $I"
+# DELER=$(bc <<< 'scale=2;$((60/$I))')
+#
+# echo $DELER
+
+# rm -rf ../${INDIR}copy
