@@ -12,8 +12,8 @@ OUTDIR=$2
 if [ $# -lt 1 ];
   then
     echo "Error with input directory"
-    echo "No argument!"
-    echo
+    echo "No valid first argument!"
+    echo "First argument is the input directory"
     echo "... Exiting program"
     echo
     exit
@@ -22,7 +22,8 @@ fi
 if [ $# -lt 2 ];
   then
     echo "Error with output directory"
-    echo "No argument!"
+    echo "No valid second argument!"
+    echo "Second argument is the output directory"
     echo
     echo "... Exiting program"
     echo
@@ -60,7 +61,6 @@ if [ -d $2 ]
   mkdir ./$2/out3_destruction
   mkdir ./$2/out4_reversed
 } &> /dev/null
-
 
 echo "Processing files..."
 echo
@@ -107,6 +107,8 @@ for f in *.wav;
     sox $f ../$2/out4_reversed/${file}_reversed.wav trim $SETOFF4 6 reverse fade 0.1 0 0.1 norm -6 fade 0.1 0 0.1
     I=$((I+1))
 done
+
+rm -rf ../${INDIR}copy
 #-------------------------------------------------------------------------------
 
 # NIET AF
@@ -120,4 +122,3 @@ done
 #     # echo $(bc <<< "scale=2; ($I/$AMTFILES)*100") "%";
 #     echo $JAAA
 # done
-# # rm -rf ../${INDIR}copy
