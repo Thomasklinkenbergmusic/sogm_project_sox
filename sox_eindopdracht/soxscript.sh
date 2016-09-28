@@ -109,13 +109,15 @@ for f in *.wav;
 done
 #-------------------------------------------------------------------------------
 
-echo "I = $I"
-
-for f in *.wav;
-  do
-    LENGTE=$(soxi -D $f)
-    JAAA=$(bc <<< "scale=2; (($LENGTE / $I) / 60)")
-    # echo $(bc <<< "scale=2; ($I/$AMTFILES)*100") "%";
-    echo $JAAA
-done
-# rm -rf ../${INDIR}copy
+# NIET AF
+#-------------------------------------------------------------------------------
+# echo "I = $I"
+#
+# for f in *.wav;
+#   do
+#     LENGTE=$(soxi -D $f)
+#     JAAA=$(bc <<< "scale=2; (($LENGTE / $I) / 60)")
+#     # echo $(bc <<< "scale=2; ($I/$AMTFILES)*100") "%";
+#     echo $JAAA
+# done
+# # rm -rf ../${INDIR}copy
