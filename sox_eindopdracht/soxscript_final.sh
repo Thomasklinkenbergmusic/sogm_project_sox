@@ -9,6 +9,7 @@ echo
 INDIR=$1
 OUTDIR=$2
 
+PROGRAM=0
 # Function for the minute mix
 function randomfile() {
      files=(*)
@@ -105,17 +106,17 @@ done
 I=0
 for f in *.wav;
   do
-    LENGTHFLOAT=$(soxi -D $f)
-    LENGTH=${LENGTHFLOAT%.*}
-    SETOFF1=$(((RANDOM%($LENGHT - 5))+1))
-    SETOFF2=$(((RANDOM%($LENGHT - 3))+1))
-    SETOFF3=$(((RANDOM%($LENGHT - 3))+1))
-    SETOFF4=$(((RANDOM%($LENGHT - 6))+1))
+    LENGTH=$(soxi -D $f)
+    LENGTH=${LENGTH%.*}
+    SETOFF1=$(((RANDOM%($LENGTH - 5))+1))
+    SETOFF2=$(((RANDOM%($LENGTH - 3))+1))
+    SETOFF3=$(((RANDOM%($LENGTH - 3))+1))
+    SETOFF4=$(((RANDOM%($LENGTH - 5))+1))
     file=$(basename $f .wav)
     sox $f ../$OUTDIR/out1_trimmed/${file}_trim.wav trim $SETOFF1 5 norm -6 fade 0.1 0 0.1
     sox $f ../$OUTDIR/out2_otherroom/${file}_otherroom.wav trim $SETOFF2 3 lowpass 250 reverb 10 norm -12 fade 0.1 0 0.1
     sox $f ../$OUTDIR/out3_destruction/${file}_destruction.wav trim $SETOFF3 2 overdrive 20 20 overdrive 20 20 overdrive 20 20 norm -18 fade 0.1 0 0.1
-    sox $f ../$OUTDIR/out4_reversed/${file}_reversed.wav trim $SETOFF4 6 reverse fade 0.1 0 0.1 norm -6 fade 0.1 0 0.1
+    sox $f ../$OUTDIR/out4_reversed/${file}_reversed.wav trim $SETOFF4 5 reverse fade 0.1 0 0.1 norm -6 fade 0.1 0 0.1
     I=$((I+1))
 done
 
@@ -124,23 +125,25 @@ TRIMLENGTH=$(bc <<< "scale=2; (60 / $I)")
 mkdir -p ../$OUTDIR/minutemix
 for f in *.wav;
   do
+    LENGTH=$(soxi -D $f)
+    LENGTH=${LENGTH%.*}
+    TRIMTRIM=${TRIMLENGTH%.*}
+    LENGTH=$((LENGTH-TRIMTRIM))
+    SETOFF=$(((RANDOM%($LENGTH - $TRIMTRIM))+1))
     VOLUME=$(((RANDOM%17)+1))
     file=$(basename $f .wav)
-    sox $f ../$OUTDIR/minutemix/${file}_trim.wav trim 0 $TRIMLENGTH remix - norm -18 gain $VOLUME fade 0.1 0 0.1
+    sox $f ../$OUTDIR/minutemix/${file}_trim.wav trim $SETOFF $TRIMLENGTH remix - norm -18 gain $VOLUME fade 0.1 0 0.1
 done
 rm -rf ../${INDIR}copy
 
 cd ../$OUTDIR/minutemix
-X=1
 
 FIRSTTEMP=$(randomfile)
+mv $FIRSTTEMP ../$FIRSTTEMP
 SECONDTEMP=$(randomfile)
+mv ../$FIRSTTEMP $FIRSTTEMP
 
-while [ $FIRSTTEMP == $SECONDTEMP ];
-  do
-    SECONDTEMP=$(randomfile)
-done
-
+X=1
 {
   for f in *.wav;
     do
@@ -164,4 +167,5 @@ done
 
 rm -rf ../minutemix
 
+echo
 echo "... done!"
